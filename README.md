@@ -4,6 +4,11 @@ Language : 🇺🇸 | [🇨🇳](./README.zh-CN.md)
 Welcome to the Tencent Cloud DBAuth SDK, which provides developers with supporting development tools to access the Tencent Cloud Database CAM verification service, simplifying the access process of the Tencent Cloud Database CAM verification service.
 </div>
 
+# Dependency Environment
+1. Dependency Environment: JDK version 1.8 and above.
+2. Before use, CAM verification must be enabled on the Tencent Cloud console.
+3. On the Tencent Cloud console, view the account APPID on the [account information](https://console.cloud.tencent.com/developer) page, and obtain the SecretID and SecretKey on the [access management](https://console.cloud.tencent.com/cam/capi) page.
+
 ### USAGE
 
 ```

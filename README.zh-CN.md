@@ -4,6 +4,11 @@
 欢迎使用腾讯云数据库CAM验证SDK，该SDK为开发者提供了支持的开发工具，以访问腾讯云数据库CAM验证服务，简化了腾讯云数据库CAM验证服务的接入过程。
 </div>
 
+# 依赖环境
+1. 依赖环境: JDK 1.8版本及以上。
+2. 使用前需要在腾讯云控制台启用CAM验证。
+3. 在腾讯云控制台[账号信息](https://console.cloud.tencent.com/developer)页面查看账号APPID，[访问管理](https://console.cloud.tencent.com/cam/capi)页面获取 SecretID 和 SecretKey 。
+
 ### 使用
 
 ```
