@@ -1,0 +1,18 @@
+syntax = "proto3";
+package com.tencentcloud.dbauth.model;
+
+message AuthTokenInfo
+{
+  uint64         appId = 1;
+  uint64         uin = 2;
+  uint64         ownerUin = 3;
+  string         reqId = 4;
+  string         instanceId = 5;
+  string         region = 6;
+  string         username = 7;
+  string         password = 8;
+  uint64         createTime = 9;
+  string         extraInfo = 10;
+  uint32         tokenType = 11;
+  uint32         randNum = 12;
+}
