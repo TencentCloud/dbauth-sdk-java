@@ -19,7 +19,7 @@ Welcome to the Tencent Cloud DBAuth SDK, which provides developers with supporti
     </dependency>
 ```
 
-### Demo
+### Example - Generate CAM Authentication Token
 
 ```
 package com.tencentcloud.dbauth;
@@ -60,7 +60,117 @@ public class GenerateDBAuthentication {
 }
 ```
 
-[ErrorCodes](https://cloud.tencent.com/document/api/1312/48205#.E5.85.AC.E5.85.B1.E9.94.99.E8.AF.AF.E7.A0.81)
+
+### Example - Connect to a Database Instance
+
+```
+package com.tencentcloud.examples;
+
+import com.tencentcloud.dbauth.DBAuthentication;
+import com.tencentcloud.dbauth.model.GenerateAuthenticationTokenRequest;
+import com.tencentcloudapi.common.Credential;
+import com.tencentcloudapi.common.exception.TencentCloudSDKException;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class CAMDatabaseAuthenticationTester {
+    public static void main(String[] args) throws Exception {
+        // Define the necessary variables for the connection
+        String region = "ap-guangzhou";
+        String instanceId = "cdb-123456";
+        String userName = "test";
+        String host = "gz-cdb-123456.sql.tencentcdb.com";
+        int port = 3306;
+        String dbName = "mysql";
+        String secretId = System.getenv("TENCENTCLOUD_SECRET_ID");
+        String secretKey = System.getenv("TENCENTCLOUD_SECRET_KEY");
+
+        // Get the connection
+        Connection connection = getDBConnectionUsingCAM(secretId, secretKey, region,
+                instanceId, userName, host, port, dbName);
+
+        // Verify the connection is successful
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT 'Success!';");
+        while (rs.next()) {
+            String id = rs.getString(1);
+            System.out.println(id); // Should print "Success!"
+        }
+
+        // Close the connection
+        stmt.close();
+        connection.close();
+    }
+
+    /**
+     * Get a database connection using CAM Database Authentication
+     *
+     * @param secretId   the secret ID
+     * @param secretKey  the secret key
+     * @param region     the region
+     * @param instanceId the instance ID
+     * @param userName   the username
+     * @param host       the host
+     * @param port       the port
+     * @param dbName     the database name
+     * @return a Connection object
+     * @throws Exception if an error occurs
+     */
+    private static Connection getDBConnectionUsingCAM(
+            String secretId, String secretKey, String region, String instanceId, String userName,
+            String host, int port, String dbName) throws Exception {
+
+        // Get the credentials from the secretId and secretKey
+        Credential credential = new Credential(secretId, secretKey);
+
+        // Define the maximum number of attempts
+        int maxAttempts = 3;
+        Exception lastException = null;
+        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                // Get the authentication token using the credentials
+                String authToken = getAuthToken(region, instanceId, userName, credential);
+                System.out.println("get AuthToken: " + authToken);
+
+                String connectionUrl = String.format("jdbc:mysql://%s:%d/%s", host, port, dbName);
+                return DriverManager.getConnection(connectionUrl, userName, authToken);
+            } catch (Exception e) {
+                lastException = e;
+                System.out.println("Attempt " + attempt + " failed.");
+            }
+        }
+        System.out.println("All attempts failed. error: " + lastException.getMessage());
+        throw lastException;
+    }
+
+    /**
+     * Get an authentication token
+     *
+     * @param region     the region
+     * @param instanceId the instance ID
+     * @param userName   the username
+     * @param credential the credential
+     * @return an authentication token
+     */
+    private static String getAuthToken(String region, String instanceId, String userName, Credential credential) throws TencentCloudSDKException {
+        // Build a GenerateAuthenticationTokenRequest.
+        GenerateAuthenticationTokenRequest tokenRequest = GenerateAuthenticationTokenRequest.builder()
+                .region(region)
+                .credential(credential)
+                .userName(userName)
+                .instanceId(instanceId)
+                .build();
+
+        return DBAuthentication.generateAuthenticationToken(tokenRequest);
+    }
+}
+```
+
+### Error Codes
+Refer to the [error code document](https://cloud.tencent.com/document/product/598/33168) for more information.
 
 ### Limitations
 
