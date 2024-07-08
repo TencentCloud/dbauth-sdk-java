@@ -131,7 +131,6 @@ public class CAMDatabaseAuthenticationTester {
             try {
                 // 使用凭证获取认证令牌
                 String authToken = getAuthToken(region, instanceId, userName, credential);
-                System.out.println("get AuthToken: " + authToken);
 
                 String connectionUrl = String.format("jdbc:mysql://%s:%d/%s", host, port, dbName);
                 return DriverManager.getConnection(connectionUrl, userName, authToken);
