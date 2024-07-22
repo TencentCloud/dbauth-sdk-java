@@ -9,5 +9,7 @@ public final class Constants {
 
     public static final String SHA256 = "SHA-256";
 
-    public static final String CAM_TEST_ENDPOINT = "cam.test.tencentcloudapi.com";
+    public static final String CAM_INTERNAL_ENDPOINT = "cam.internal.tencentcloudapi.com";
+
+    public static final String CAM_EXTERNAL_ENDPOINT = "cam.tencentcloudapi.com";
 }
