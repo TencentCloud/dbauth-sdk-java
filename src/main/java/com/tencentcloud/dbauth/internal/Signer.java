@@ -13,9 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Base64;
 
 /**
@@ -36,15 +33,13 @@ public final class Signer {
     // The authentication key
     private final String authKey;
 
-    // Whether to use the internal endpoint
-    private boolean isUseInternalEndpoint;
 
     /**
      * Constructs a new Signer with the provided request.
      *
      * @param request the request containing the necessary information to generate an authentication token
      */
-    public Signer(GenerateAuthenticationTokenRequest request) throws TencentCloudSDKException {
+    public Signer(GenerateAuthenticationTokenRequest request) {
         this.request = request;
 
         // Generate the authentication key
@@ -57,44 +52,6 @@ public final class Signer {
                 + request.credential().getSecretId();
 
         this.authKey = Base64.getEncoder().encodeToString(key.getBytes());
-
-        if (!isEndpointReachable(Constants.CAM_EXTERNAL_ENDPOINT)) {
-            if (isEndpointReachable(Constants.CAM_INTERNAL_ENDPOINT)) {
-                isUseInternalEndpoint = true;
-                log.info("CAM external endpoint is not reachable, using the internal endpoint");
-            } else {
-                log.error("CAM external and internal endpoints are not reachable");
-                throw new TencentCloudSDKException(
-                        "Failed to request AuthToken, CAM external and internal endpoints are not reachable",
-                        "", CamErrorCode.INTERNALERROR.getValue());
-            }
-        }
-    }
-
-    /**
-     * Checks if the specified endpoint is reachable.
-     *
-     * @param endpoint the endpoint URL to check
-     * @return true if the endpoint is reachable, false otherwise
-     */
-    private boolean isEndpointReachable(String endpoint) {
-        try {
-            URL url = new URL("https://" + endpoint);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setConnectTimeout(5000); // 5 seconds
-            connection.connect();
-
-            int responseCode = connection.getResponseCode();
-            return responseCode == 200;
-        } catch (IOException e) {
-            log.info("Failed to connect to endpoint {} reachability: {}", endpoint, e.getMessage());
-            return false;
-        } catch (Exception e) {
-            log.info("An unexpected error occurred while checking endpoint {} reachability: {}",
-                    endpoint, e.getMessage());
-            return false;
-        }
     }
 
     /**
@@ -247,7 +204,7 @@ public final class Signer {
 
         CamClient client = new CamClient(request.credential(), request.region());
         HttpProfile httpProfile = client.getClientProfile().getHttpProfile();
-        if (isUseInternalEndpoint) {
+        if (request.internalNetworkAccess()) {
             httpProfile.setEndpoint(Constants.CAM_INTERNAL_ENDPOINT);
         }
         httpProfile.setWriteTimeout(30); // default 0

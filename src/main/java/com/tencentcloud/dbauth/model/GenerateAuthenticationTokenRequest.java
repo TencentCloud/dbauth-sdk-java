@@ -10,6 +10,7 @@ public final class GenerateAuthenticationTokenRequest {
     private final String instanceId;
     private final String userName;
     private final Credential credential;
+    private final boolean internalNetworkAccess;
 
     private GenerateAuthenticationTokenRequest(Builder builder) throws TencentCloudSDKException {
         builder.checkInvalid();
@@ -17,6 +18,7 @@ public final class GenerateAuthenticationTokenRequest {
         this.instanceId = builder.instanceId;
         this.userName = builder.userName;
         this.credential = builder.credential;
+        this.internalNetworkAccess = builder.internalNetworkAccess;
     }
 
     public static Builder builder() {
@@ -39,11 +41,16 @@ public final class GenerateAuthenticationTokenRequest {
         return credential;
     }
 
+    public boolean internalNetworkAccess() {
+        return internalNetworkAccess;
+    }
+
     public static final class Builder {
         private String region;
         private String instanceId;
         private String userName;
         private Credential credential;
+        private boolean internalNetworkAccess;
 
         private Builder() {
         }
@@ -65,6 +72,17 @@ public final class GenerateAuthenticationTokenRequest {
 
         public Builder credential(Credential credential) {
             this.credential = credential;
+            return this;
+        }
+
+        /**
+         * Set the internal network access. default is false.
+         *
+         * @param internalNetworkAccess the internal network access
+         * @return the Builder object
+         */
+        public Builder internalNetworkAccess(boolean internalNetworkAccess) {
+            this.internalNetworkAccess = internalNetworkAccess;
             return this;
         }
 
