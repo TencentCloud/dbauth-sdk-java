@@ -3,6 +3,7 @@ package com.tencentcloud.dbauth.model;
 import com.tencentcloudapi.cam.v20190116.CamErrorCode;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
+import com.tencentcloudapi.common.profile.ClientProfile;
 import org.apache.commons.lang3.StringUtils;
 
 public final class GenerateAuthenticationTokenRequest {
@@ -10,7 +11,7 @@ public final class GenerateAuthenticationTokenRequest {
     private final String instanceId;
     private final String userName;
     private final Credential credential;
-    private final boolean internalNetworkAccess;
+    private final ClientProfile clientProfile;
 
     private GenerateAuthenticationTokenRequest(Builder builder) throws TencentCloudSDKException {
         builder.checkInvalid();
@@ -18,7 +19,7 @@ public final class GenerateAuthenticationTokenRequest {
         this.instanceId = builder.instanceId;
         this.userName = builder.userName;
         this.credential = builder.credential;
-        this.internalNetworkAccess = builder.internalNetworkAccess;
+        this.clientProfile = builder.clientProfile;
     }
 
     public static Builder builder() {
@@ -41,8 +42,8 @@ public final class GenerateAuthenticationTokenRequest {
         return credential;
     }
 
-    public boolean internalNetworkAccess() {
-        return internalNetworkAccess;
+    public ClientProfile clientProfile() {
+        return clientProfile;
     }
 
     public static final class Builder {
@@ -50,7 +51,7 @@ public final class GenerateAuthenticationTokenRequest {
         private String instanceId;
         private String userName;
         private Credential credential;
-        private boolean internalNetworkAccess;
+        private ClientProfile clientProfile;
 
         private Builder() {
         }
@@ -76,13 +77,17 @@ public final class GenerateAuthenticationTokenRequest {
         }
 
         /**
-         * Set the internal network access. default is false.
+         * Set the client profile for the request. This is an optional configuration.
+         * <p>
+         * The client profile allows for additional customization of the request, such as setting
+         * specific HTTP options. If not set, default settings are used.
+         * </p>
          *
-         * @param internalNetworkAccess the internal network access
+         * @param clientProfile The {@link ClientProfile} to be used with this request.
          * @return the Builder object
          */
-        public Builder internalNetworkAccess(boolean internalNetworkAccess) {
-            this.internalNetworkAccess = internalNetworkAccess;
+        public Builder clientProfile(ClientProfile clientProfile) {
+            this.clientProfile = clientProfile;
             return this;
         }
 

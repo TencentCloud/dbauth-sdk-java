@@ -202,13 +202,15 @@ public final class Signer {
         req.setResourceRegion(request.region());
         req.setResourceAccount(request.userName());
 
-        CamClient client = new CamClient(request.credential(), request.region());
-        HttpProfile httpProfile = client.getClientProfile().getHttpProfile();
-        if (request.internalNetworkAccess()) {
-            httpProfile.setEndpoint(Constants.CAM_INTERNAL_ENDPOINT);
+        CamClient client;
+        if (request.clientProfile() != null) {
+            client = new CamClient(request.credential(), request.region(), request.clientProfile());
+        } else {
+            client = new CamClient(request.credential(), request.region());
+            HttpProfile httpProfile = client.getClientProfile().getHttpProfile();
+            httpProfile.setWriteTimeout(30); // default 0
+            httpProfile.setReadTimeout(30);  // default 0
         }
-        httpProfile.setWriteTimeout(30); // default 0
-        httpProfile.setReadTimeout(30);  // default 0
 
         TencentCloudSDKException lastException = null;
         for (int i = 0; i < 3; i++) {

@@ -5,9 +5,12 @@ Welcome to the Tencent Cloud DBAuth SDK, which provides developers with supporti
 </div>
 
 ### Dependency Environment
+
 1. Dependency Environment: JDK version 1.8 and above.
 2. Before use, CAM verification must be enabled on the Tencent Cloud console.
-3. On the Tencent Cloud console, view the account APPID on the [account information](https://console.cloud.tencent.com/developer) page, and obtain the SecretID and SecretKey on the [access management](https://console.cloud.tencent.com/cam/capi) page.
+3. On the Tencent Cloud console, view the account APPID on
+   the [account information](https://console.cloud.tencent.com/developer) page, and obtain the SecretID and SecretKey on
+   the [access management](https://console.cloud.tencent.com/cam/capi) page.
 
 ### USAGE
 
@@ -15,7 +18,7 @@ Welcome to the Tencent Cloud DBAuth SDK, which provides developers with supporti
     <dependency>
       <groupId>com.tencentcloudapi</groupId>
       <artifactId>tencentcloud-dbauth-sdk-java</artifactId>
-      <version>1.0.2</version>
+      <version>1.0.3</version>
     </dependency>
 ```
 
@@ -59,7 +62,6 @@ public class GenerateDBAuthentication {
     }
 }
 ```
-
 
 ### Example - Connect to a Database Instance
 
@@ -169,6 +171,7 @@ public class CAMDatabaseAuthenticationTester {
 ```
 
 ### Error Codes
+
 Refer to the [error code document](https://cloud.tencent.com/document/product/598/33168) for more information.
 
 ### Limitations
