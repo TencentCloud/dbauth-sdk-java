@@ -44,12 +44,20 @@ public class GenerateDBAuthentication {
 
     public static String getAuthToken(String region, String instanceId, String userName, Credential credential) {
         try {
+            // 实例化一个http选项，可选的，没有特殊需求可以跳过
+            HttpProfile httpProfile = new HttpProfile();
+            httpProfile.setEndpoint("cam.tencentcloudapi.com");
+            // 实例化一个client选项，可选的，没有特殊需求可以跳过
+            ClientProfile clientProfile = new ClientProfile();
+            clientProfile.setHttpProfile(httpProfile);
+
             // 构建 GenerateAuthenticationTokenRequest
             GenerateAuthenticationTokenRequest tokenRequest = GenerateAuthenticationTokenRequest.builder()
                     .region(region)
                     .credential(credential)
                     .userName(userName)
                     .instanceId(instanceId)
+                    .clientProfile(clientProfile) // clientProfile是可选的
                     .build();
 
             return DBAuthentication.generateAuthenticationToken(tokenRequest);
@@ -156,12 +164,20 @@ public class CAMDatabaseAuthenticationTester {
      * @return 认证令牌
      */
     private static String getAuthToken(String region, String instanceId, String userName, Credential credential) throws TencentCloudSDKException {
+        // 实例化一个http选项，可选的，没有特殊需求可以跳过
+        HttpProfile httpProfile = new HttpProfile();
+        httpProfile.setEndpoint("cam.tencentcloudapi.com");
+        // 实例化一个client选项，可选的，没有特殊需求可以跳过
+        ClientProfile clientProfile = new ClientProfile();
+        clientProfile.setHttpProfile(httpProfile);
+
         // 构建 GenerateAuthenticationTokenRequest
         GenerateAuthenticationTokenRequest tokenRequest = GenerateAuthenticationTokenRequest.builder()
                 .region(region)
                 .credential(credential)
                 .userName(userName)
                 .instanceId(instanceId)
+                .clientProfile(clientProfile) // clientProfile是可选的
                 .build();
 
         return DBAuthentication.generateAuthenticationToken(tokenRequest);

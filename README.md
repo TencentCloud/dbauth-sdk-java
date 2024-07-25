@@ -45,12 +45,20 @@ public class GenerateDBAuthentication {
 
     public static String getAuthToken(String region, String instanceId, String userName, Credential credential) {
         try {
+            // Instantiate an HTTP profile, optional, can be skipped if there are no special requirements
+            HttpProfile httpProfile = new HttpProfile();
+            httpProfile.setEndpoint("cam.tencentcloudapi.com");
+            // Instantiate a client profile, optional, can be skipped if there are no special requirements
+            ClientProfile clientProfile = new ClientProfile();
+            clientProfile.setHttpProfile(httpProfile);
+
             // Build a GenerateAuthenticationTokenRequest.
             GenerateAuthenticationTokenRequest tokenRequest = GenerateAuthenticationTokenRequest.builder()
                     .region(region)
                     .credential(credential)
                     .userName(userName)
                     .instanceId(instanceId)
+                    .clientProfile(clientProfile) // clientProfile is optional
                     .build();
 
             return DBAuthentication.generateAuthenticationToken(tokenRequest);
@@ -157,12 +165,20 @@ public class CAMDatabaseAuthenticationTester {
      * @return an authentication token
      */
     private static String getAuthToken(String region, String instanceId, String userName, Credential credential) throws TencentCloudSDKException {
+        // Instantiate an HTTP profile, optional, can be skipped if there are no special requirements
+        HttpProfile httpProfile = new HttpProfile();
+        httpProfile.setEndpoint("cam.tencentcloudapi.com");
+        // Instantiate a client profile, optional, can be skipped if there are no special requirements
+        ClientProfile clientProfile = new ClientProfile();
+        clientProfile.setHttpProfile(httpProfile);
+
         // Build a GenerateAuthenticationTokenRequest.
         GenerateAuthenticationTokenRequest tokenRequest = GenerateAuthenticationTokenRequest.builder()
                 .region(region)
                 .credential(credential)
                 .userName(userName)
                 .instanceId(instanceId)
+                .clientProfile(clientProfile) // clientProfile is optional
                 .build();
 
         return DBAuthentication.generateAuthenticationToken(tokenRequest);
