@@ -22,6 +22,18 @@ Welcome to the Tencent Cloud DBAuth SDK, which provides developers with supporti
     </dependency>
 ```
 
+#### Indirect Dependencies
+
+For tencentcloud-sdk-java version 3.1.1039 and above.
+
+```
+    <dependency>
+        <groupId>com.tencentcloudapi</groupId>
+        <artifactId>tencentcloud-sdk-java</artifactId>
+        <version>3.1.1039</version>
+    </dependency>
+```
+
 ### Example - Generate CAM Authentication Token
 
 ```
@@ -29,6 +41,8 @@ package com.tencentcloud.dbauth;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloud.dbauth.model.GenerateAuthenticationTokenRequest;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
+import com.tencentcloudapi.common.profile.ClientProfile;
+import com.tencentcloudapi.common.profile.HttpProfile;
 
 public class GenerateDBAuthentication {
 
@@ -80,6 +94,8 @@ import com.tencentcloud.dbauth.DBAuthentication;
 import com.tencentcloud.dbauth.model.GenerateAuthenticationTokenRequest;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
+import com.tencentcloudapi.common.profile.ClientProfile;
+import com.tencentcloudapi.common.profile.HttpProfile;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

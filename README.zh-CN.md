@@ -21,6 +21,18 @@
     </dependency>
 ```
 
+#### 间接依赖项
+
+tencentcloud-sdk-java 3.1.1039版本及以上。
+
+```
+    <dependency>
+        <groupId>com.tencentcloudapi</groupId>
+        <artifactId>tencentcloud-sdk-java</artifactId>
+        <version>3.1.1039</version>
+    </dependency>
+```
+
 ### 示例 - 生成 CAM 身份验证令牌
 
 ```
@@ -28,6 +40,8 @@ package com.tencentcloud.dbauth;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloud.dbauth.model.GenerateAuthenticationTokenRequest;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
+import com.tencentcloudapi.common.profile.ClientProfile;
+import com.tencentcloudapi.common.profile.HttpProfile;
 
 public class GenerateDBAuthentication {
 
@@ -79,6 +93,8 @@ import com.tencentcloud.dbauth.DBAuthentication;
 import com.tencentcloud.dbauth.model.GenerateAuthenticationTokenRequest;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
+import com.tencentcloudapi.common.profile.ClientProfile;
+import com.tencentcloudapi.common.profile.HttpProfile;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
