@@ -13,7 +13,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.Date;
 
 /**
  * Signer is a utility class that provides methods for generating and updating authentication tokens.
@@ -84,6 +86,9 @@ public final class Signer {
         try {
             // 1. Request the authentication token
             Token token = getAuthToken();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = new Date(token.getExpires());
+            log.debug("Successfully get the authentication token, expiry: {}", sdf.format(date));
             setTokenAndUpdateTask(token);
         } catch (TencentCloudSDKException e) {
             // 2. If the error code requires user notification, throw the exception
@@ -92,7 +97,7 @@ public final class Signer {
             }
 
             // 3. If the token generation fails, use the fallback token
-            Token fallbackToken = TOKEN_CACHE.fallback(authKey);
+            Token fallbackToken = TOKEN_CACHE.fallback(request);
             if (fallbackToken != null) {
                 log.info("Using the fallback token");
                 setTokenAndUpdateTask(fallbackToken);
@@ -121,13 +126,13 @@ public final class Signer {
      */
     public Token getAuthToken() throws TencentCloudSDKException {
         BuildDataFlowAuthTokenResponse response = requestAuthToken();
+        String requestId = response != null ? response.getRequestId() : "";
         if (response == null) {
             log.error("Failed to request AuthToken, response is null");
             throw new TencentCloudSDKException(
-                    "Failed to request AuthToken, response is null", "", CamErrorCode.INTERNALERROR.getValue());
+                    "Failed to request AuthToken, response is null", requestId, CamErrorCode.INTERNALERROR.getValue());
         }
 
-        String requestId = response.getRequestId();
         if (response.getCredentials() == null) {
             log.error("Failed to request AuthToken, tokenResponse is null, requestId: {}", requestId);
             throw new TencentCloudSDKException(
@@ -222,10 +227,11 @@ public final class Signer {
                     log.error("Failed to request AuthToken, error: {}", e.toString());
                     break;
                 } else {
-                    log.error("Failed to request AuthToken, Retry to request the token, error: {}", e.toString());
+                    log.error("Failed to request AuthToken, Retry to request the token," +
+                            " TencentCloudSDKException: {}", e.toString());
                 }
             } catch (Exception e) {
-                log.error("Failed to request AuthToken , error: {}", e.getMessage());
+                log.error("Failed to request AuthToken, Retry to request the token, Exception: {}", e.toString());
                 lastException = new TencentCloudSDKException(
                         "Failed to request AuthToken, error: " + e.getMessage(),
                         "",
@@ -247,8 +253,7 @@ public final class Signer {
         // Get the delay for the next token update
         long delayForNextTokenUpdate = getDelayForNextTokenUpdate(remainingTimeBeforeExpiry);
 
-        log.debug("Scheduling next token key update in {} ms, token remaining time: {} ms",
-                delayForNextTokenUpdate, remainingTimeBeforeExpiry);
+        log.debug("Scheduling next token key update in {} ms", delayForNextTokenUpdate);
 
         // Save the timer for the next token update
         TIMER_MANAGER.saveTimer(authKey, delayForNextTokenUpdate, () -> {

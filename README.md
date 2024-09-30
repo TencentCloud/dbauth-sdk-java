@@ -18,7 +18,7 @@ Welcome to the Tencent Cloud DBAuth SDK, which provides developers with supporti
     <dependency>
       <groupId>com.tencentcloudapi</groupId>
       <artifactId>tencentcloud-dbauth-sdk-java</artifactId>
-      <version>1.0.3</version>
+      <version>1.0.4</version>
     </dependency>
 ```
 
@@ -165,6 +165,7 @@ public class CAMDatabaseAuthenticationTester {
             } catch (Exception e) {
                 lastException = e;
                 System.out.println("Attempt " + attempt + " failed.");
+                Thread.sleep(5000);
             }
         }
         System.out.println("All attempts failed. error: " + lastException.getMessage());
